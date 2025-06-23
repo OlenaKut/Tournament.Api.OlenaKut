@@ -1,31 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Tournament.Data.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
+using Tournament.Data.Data;
 
 namespace Tournament.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tournament/{tournamentId}/games")]
     [ApiController]
+    [Produces("application/json")]
     public class GamesController : ControllerBase
     {
         private readonly TournamentApiContext _context;
-
-        public GamesController(TournamentApiContext context)
+        private readonly IMapper _mapper;
+        public GamesController(TournamentApiContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Games
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGame()
+        public async Task<ActionResult<IEnumerable<GameDto>>> GetGames(int tournamentId)
         {
-            return await _context.Game.ToListAsync();
+            //return await _context.Game.ToListAsync();
+            var tournamenExist = await _context.TournamentDetails.AnyAsync(t => t.Id == tournamentId);
+            if (!tournamenExist) return NotFound("Tournament not found");
+
+            var games = await _context.Game.Where(g => g.TournamentId.Equals(tournamentId)).ToListAsync();
+            var gamesDto = _mapper.Map<IEnumerable<GameDto>>(games);
+
+            return Ok(gamesDto);
         }
 
         // GET: api/Games/5

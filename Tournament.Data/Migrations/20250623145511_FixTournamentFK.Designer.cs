@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tournament.Data.Data;
 
@@ -11,9 +12,11 @@ using Tournament.Data.Data;
 namespace Tournament.Data.Migrations
 {
     [DbContext(typeof(TournamentApiContext))]
-    partial class TournamentApiContextModelSnapshot : ModelSnapshot
+    [Migration("20250623145511_FixTournamentFK")]
+    partial class FixTournamentFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,15 +39,12 @@ namespace Tournament.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TournamentDetailsId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TournamentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TournamentDetailsId");
+                    b.HasIndex("TournamentId");
 
                     b.ToTable("Game");
                 });
@@ -70,13 +70,13 @@ namespace Tournament.Data.Migrations
 
             modelBuilder.Entity("Tournament.Core.Entities.Game", b =>
                 {
-                    b.HasOne("Tournament.Core.Entities.TournamentDetails", "TournamentDetails")
+                    b.HasOne("Tournament.Core.Entities.TournamentDetails", "Tournament")
                         .WithMany("Games")
-                        .HasForeignKey("TournamentDetailsId")
+                        .HasForeignKey("TournamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TournamentDetails");
+                    b.Navigation("Tournament");
                 });
 
             modelBuilder.Entity("Tournament.Core.Entities.TournamentDetails", b =>

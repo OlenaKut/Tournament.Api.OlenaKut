@@ -7,39 +7,49 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
 using Tournament.Core.Entities;
+using Tournament.Core.DTOs;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace Tournament.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Tournament")]
     [ApiController]
+    [Produces("application/json")]
     public class TournamentController : ControllerBase
     {
         private readonly TournamentApiContext _context;
+        private readonly IMapper _mapper;
 
-        public TournamentController(TournamentApiContext context)
+        public TournamentController(TournamentApiContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Tournament
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TournamentDetails>>> GetTournamentDetails()
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
-            return await _context.TournamentDetails.ToListAsync();
+            //return await _context.TournamentDetails.Include(g => g.Games).ToListAsync();
+            var tournaments = includeGames ? _mapper.Map<IEnumerable<TournamentDto>>(await _context.TournamentDetails.Include(g => g.Games).ToListAsync())
+                : _mapper.Map<IEnumerable<TournamentDto>>(await _context.TournamentDetails.ToListAsync());
+            return Ok(tournaments);
         }
 
         // GET: api/Tournament/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TournamentDetails>> GetTournamentDetails(int id)
+        public async Task<ActionResult<TournamentDto>> GetTournamentDetails(int id)
         {
             var tournamentDetails = await _context.TournamentDetails.FindAsync(id);
 
             if (tournamentDetails == null)
             {
-                return NotFound();
+                return NotFound("Tournament not found");
             }
+            var dto = _mapper.Map<TournamentDto>(tournamentDetails);
 
-            return tournamentDetails;
+            return dto;
         }
 
         // PUT: api/Tournament/5
