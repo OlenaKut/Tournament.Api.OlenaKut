@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tournament.Data.Data;
 using System.Threading.Tasks;
+using Tournament.Data.Repositories;
+using Tournament.Core.Repositories;
 
 namespace Tournament.Api
 {
@@ -23,6 +25,9 @@ namespace Tournament.Api
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
             var app = builder.Build();
 

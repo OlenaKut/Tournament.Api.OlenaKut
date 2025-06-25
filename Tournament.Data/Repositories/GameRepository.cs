@@ -11,7 +11,7 @@ using Tournament.Data.Data;
 
 namespace Tournament.Data.Repositories
 {
-    public class GameRepository
+    public class GameRepository : IGameRepository
     {
         private readonly TournamentApiContext _context;
         public GameRepository(TournamentApiContext context)
