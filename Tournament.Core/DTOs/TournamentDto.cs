@@ -13,6 +13,6 @@ namespace Tournament.Core.DTOs
         public string? Title { get; init; }
         public DateTime StartGame { get; init; }
 
-        public List<GameDto> Games { get; init; }
+        public IEnumerable<GameDto>? Games { get; init; }
     }
 }

@@ -39,6 +39,7 @@ namespace Tournament.Data.Repositories
         {
             _context.TournamentDetails.Add(tournament);
         }
+
         public void Update(TournamentDetails tournament)
         {
             _context.TournamentDetails.Update(tournament);
