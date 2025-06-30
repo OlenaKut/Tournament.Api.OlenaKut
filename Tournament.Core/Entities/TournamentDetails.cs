@@ -17,7 +17,7 @@ namespace Tournament.Core.Entities
         public string? Title { get; set; }
         public DateTime StartGame { get; set; }
         public DateTime EndGame { get; set; }
-        public List<Game>? Games { get; set; }
+        public List<Game>? Games { get; set; } = null!;
 
     }
 }

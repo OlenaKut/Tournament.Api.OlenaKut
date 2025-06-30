@@ -99,7 +99,7 @@ namespace Tournament.Api.Controllers
             _unitOfWork.GameRepository.AddGame(game);
             await _unitOfWork.CompleteAsync();
 
-            return CreatedAtAction("GetGame", new { tournamentId = game.TournamentId, id = game.Id }, game);
+            return CreatedAtAction(nameof(GetGame), new { id = game.Id }, game);
         }
 
         // DELETE: api/Games/5
