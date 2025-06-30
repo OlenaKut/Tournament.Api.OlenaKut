@@ -61,6 +61,32 @@ namespace Tournament.Api.Controllers
             return game;
         }
 
+        //GET by title
+        [HttpGet("by-title")]
+        public async Task<ActionResult<GameDto>> GetGameByTitle(int tournamentId, string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return BadRequest("Title must be provided.");
+            }
+
+            var tournamentExists = await _unitOfWork.TournamentRepository.TournamentExistAsync(tournamentId);
+            if (!tournamentExists)
+            {
+                return NotFound("Tournament not found.");
+            }
+
+            var game = await _unitOfWork.GameRepository.GetGameByTitleAsync(tournamentId, title);
+
+            if (game == null)
+            {
+                return NotFound($"No game with title '{title}' found in this tournament.");
+            }
+
+            var dto = _mapper.Map<GameDto>(game);
+            return Ok(dto);
+        }
+
         // PUT: api/Games/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

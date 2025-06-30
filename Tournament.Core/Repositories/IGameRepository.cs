@@ -11,12 +11,12 @@ namespace Tournament.Core.Repositories
     {
         Task<IEnumerable<Game>> GetGamesAsync(int tournamentId);
         Task<Game?> GetGameAsync(int id);
+        Task<Game?> GetGameByTitleAsync(int tournamentId, string title);
+
         Task<bool> AnyGameAsync(int id);
         void AddGame(Game game);
         void UpdateGame(Game game);
         void RemoveGame(Game game);
-
-        //Task<IEnumerable<Game>> GetAllByTournamentIdAsync(int tournamentId);
 
     }
 }

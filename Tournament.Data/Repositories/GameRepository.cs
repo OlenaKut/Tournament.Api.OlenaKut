@@ -27,6 +27,12 @@ namespace Tournament.Data.Repositories
             return await _context.Game.FindAsync(id);
         }
 
+        public async Task<Game?> GetGameByTitleAsync(int tournamentId, string title)
+        {
+            return await _context.Game
+                .FirstOrDefaultAsync(g => g.TournamentId == tournamentId && g.Title.ToUpper() == title.ToUpper());
+        }
+
         public async Task<bool> AnyGameAsync(int id)
         {
             return await _context.Game.AnyAsync(g => g.Id == id);
@@ -45,12 +51,5 @@ namespace Tournament.Data.Repositories
         {
             _context.Game.Remove(game);
         }
-
-        //public async Task<IEnumerable<Game>> GetByTournamentIdAsync(int tournamentId)
-        //{
-        //    return await _context.Game
-        //        .Where(g => g.TournamentId == tournamentId)
-        //        .ToListAsync();
-        //}
     }
 }
