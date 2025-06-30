@@ -36,11 +36,20 @@ namespace Tournament.Api.Controllers
 
         // GET: api/Tournament
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames, string? sortBy = null)
         {
             //return await _context.TournamentDetails.Include(g => g.Games).ToListAsync();
             var tournaments = includeGames ? _mapper.Map<IEnumerable<TournamentDto>>(await _unitOfWork.TournamentRepository.GetAllAsync(true))
-                : _mapper.Map<IEnumerable<TournamentDto>>(await _unitOfWork.TournamentRepository.GetAllAsync(false));
+                : _mapper.Map<IEnumerable<TournamentDto>>(await _unitOfWork.TournamentRepository.GetAllAsync(false)); 
+
+            tournaments = sortBy?.ToLower() switch
+            {
+                "title" => tournaments.OrderBy(t => t.Title),
+                "start" => tournaments.OrderBy(t => t.StartGame),
+                "finish" => tournaments.OrderBy(t => t.EndDate),
+                _ => tournaments
+            };
+
 
             return Ok(tournaments);
         }
