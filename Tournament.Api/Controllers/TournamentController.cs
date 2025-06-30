@@ -1,16 +1,20 @@
-﻿using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Humanizer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Tournament.Data.Data;
-using Tournament.Core.Entities;
 using Tournament.Core.DTOs;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
+using Tournament.Data.Data;
+using Tournament.Data.Migrations;
 
 namespace Tournament.Api.Controllers
 {
@@ -119,5 +123,29 @@ namespace Tournament.Api.Controllers
 
             return NoContent();
         }
+
+        //PATCH: api/Tournament/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchTournament(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
+        {
+            if (patchDocument == null) return BadRequest("No patchdocument");
+
+            var tournament = await _unitOfWork.TournamentRepository.GetAsync(id);
+            if (tournament == null)
+                return NotFound("Tournament not found");
+
+            var dto = _mapper.Map<TournamentUpdateDto>(tournament);
+
+            patchDocument.ApplyTo(dto, ModelState);
+            if (!TryValidateModel(dto))
+                return UnprocessableEntity(ModelState);
+
+            _mapper.Map(dto, tournament);
+            await _unitOfWork.CompleteAsync();
+
+            return NoContent();
+
+        }
+
     }
 }

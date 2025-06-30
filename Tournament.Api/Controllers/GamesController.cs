@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -116,6 +117,36 @@ namespace Tournament.Api.Controllers
             await _unitOfWork.CompleteAsync();
 
             return NoContent();
+        }
+
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchGame(int id,  int tournamentId, JsonPatchDocument<GameUpdateDto> patchDocument)
+        {
+            if (patchDocument == null) 
+                return BadRequest("No patchdocument");
+
+            var tournamentExists = await _unitOfWork.TournamentRepository.TournamentExistAsync(tournamentId);
+
+            if (!tournamentExists) 
+                return NotFound("Tournament does not exist");
+
+            var gameToPatch = await _unitOfWork.GameRepository.GetGameAsync(id);
+
+            if (gameToPatch == null || gameToPatch.TournamentId != tournamentId)
+                return NotFound("Game does not exist in this tournament");
+
+            var dto = _mapper.Map<GameUpdateDto>(gameToPatch);
+
+            patchDocument.ApplyTo(dto, ModelState);
+            if (!TryValidateModel(dto))
+                return UnprocessableEntity(ModelState);
+
+            _mapper.Map(dto, gameToPatch);
+            await _unitOfWork.CompleteAsync();
+
+            return NoContent();
+
         }
     }
 }
