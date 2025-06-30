@@ -49,8 +49,8 @@ namespace Tournament.Data.Data
                 {
                     var gameFaker = new Faker<Game>("sv")
                         .RuleFor(g => g.Title, f2 => f2.Lorem.Word())
-                        .RuleFor(g => g.Time, f2 => f2.Date.Between(t.StartGame, t.StartGame.AddMonths(3)))
-                        .RuleFor(g => g.TournamentDetails, _ => t); // ✅ link back to parent tournament
+                        .RuleFor(g => g.Time, f2 => f2.Date.Between(t.StartGame, t.StartGame.AddMonths(3)));
+                        //.RuleFor(g => g.TournamentDetails, _ => t); // ✅ link back to parent tournament
 
                     return gameFaker.Generate(f.Random.Int(3, 6));
                 });

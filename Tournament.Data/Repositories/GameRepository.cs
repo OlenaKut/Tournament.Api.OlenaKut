@@ -18,33 +18,40 @@ namespace Tournament.Data.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Game>> GetAllAsync()
+        public async Task<IEnumerable<Game>> GetGamesAsync()
         {
             return await _context.Game.ToListAsync();
         }
 
-        public async Task<Game?> GetAsync(int id)
+        public async Task<Game?> GetGameAsync(int id)
         {
             return await _context.Game.FindAsync(id);
         }
 
-        public async Task<bool> AnyAsync(int id)
+        public async Task<bool> AnyGameAsync(int id)
         {
             return await _context.Game.AnyAsync(g => g.Id == id);
         }
 
-        public void Add(Game game)
+        public void AddGame(Game game)
         {
             _context.Game.Add(game);
         }
-        public void Update(Game game)
+        public void UpdateGame(Game game)
         {
             _context.Game.Update(game);
         }
 
-        public void Remove(Game game)
+        public void RemoveGame(Game game)
         {
             _context.Game.Remove(game);
+        }
+
+        public async Task<IEnumerable<Game>> GetAllByTournamentIdAsync(int tournamentId)
+        {
+            return await _context.Game
+                .Where(g => g.TournamentId == tournamentId)
+                .ToListAsync();
         }
     }
 }

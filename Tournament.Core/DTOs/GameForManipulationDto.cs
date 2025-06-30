@@ -5,17 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tournament.Core.Entities
+namespace Tournament.Core.DTOs
 {
-    public class TournamentDetails
+    public class GameForManipulationDto
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]
         public string? Title { get; set; }
-        public DateTime StartGame { get; set; }
-        public ICollection<Game>? Games { get; set; }
-
+        public DateTime Time { get; set; }
     }
 }

@@ -17,5 +17,10 @@ namespace Tournament.Core.Repositories
         void Update(TournamentDetails tournament);
         void Remove(TournamentDetails tournament);
 
+        Task<bool> TournamentExistAsync(int id);
+
+        Task<TournamentDetails?> GetTournamentWithGamesAsync(int id);
+
+
     }
 }

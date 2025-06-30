@@ -14,7 +14,7 @@ namespace Tournament.Data.Data
         {
         }
 
-        public DbSet<Tournament.Core.Entities.TournamentDetails> TournamentDetails { get; set; } = default!;
-        public DbSet<Tournament.Core.Entities.Game> Game { get; set; } = default!;
+        public DbSet<TournamentDetails> TournamentDetails { get; set; } = default!;
+        public DbSet<Game> Game { get; set; } = default!;
     }
 }

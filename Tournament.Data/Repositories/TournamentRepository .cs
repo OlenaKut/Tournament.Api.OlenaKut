@@ -49,5 +49,17 @@ namespace Tournament.Data.Repositories
         {
             _context.TournamentDetails.Remove(tournament); 
         }
+
+        public async Task<bool> TournamentExistAsync(int id)
+        {
+            return await _context.TournamentDetails.AllAsync(t => t.Id == id);
+        }
+
+        public async Task<TournamentDetails?> GetTournamentWithGamesAsync(int id)
+        {
+            return await _context.TournamentDetails
+                .Include(t => t.Games)
+                .FirstOrDefaultAsync(t => t.Id == id);
+        }
     }
 }

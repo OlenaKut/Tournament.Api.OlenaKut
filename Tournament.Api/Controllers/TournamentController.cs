@@ -98,12 +98,21 @@ namespace Tournament.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTournamentDetails(int id)
         {
-            var existingTournament = await _unitOfWork.TournamentRepository.GetAsync(id);
+            var existingTournament = await _unitOfWork.TournamentRepository.GetTournamentWithGamesAsync(id);
 
             if (existingTournament == null)
             {
                 return NotFound("Tournament not found");
             }
+
+            if(existingTournament.Games != null && existingTournament.Games.Any())
+            {
+                foreach (var game in existingTournament.Games.ToList())
+                {
+                    _unitOfWork.GameRepository.RemoveGame(game);
+                }
+            }
+
 
             _unitOfWork.TournamentRepository.Remove(existingTournament);
             await _unitOfWork.CompleteAsync();

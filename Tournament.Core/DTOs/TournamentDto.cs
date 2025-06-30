@@ -12,6 +12,7 @@ namespace Tournament.Core.DTOs
         public int Id { get; init; }
         public string? Title { get; init; }
         public DateTime StartGame { get; init; }
+        public DateTime EndDate => StartGame.AddMonths(3);
 
         public IEnumerable<GameDto>? Games { get; init; }
     }

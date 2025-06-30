@@ -18,6 +18,6 @@ namespace Tournament.Core.Entities
         public DateTime Time { get; set; }
         public int TournamentId { get; set; }
 
-        public TournamentDetails TournamentDetails { get; set; }
+       // public TournamentDetails TournamentDetails { get; set; }
     }
 }
