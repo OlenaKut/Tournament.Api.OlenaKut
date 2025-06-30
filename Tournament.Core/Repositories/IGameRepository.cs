@@ -9,14 +9,14 @@ namespace Tournament.Core.Repositories
 {
     public interface IGameRepository
     {
-        Task<IEnumerable<Game>> GetGamesAsync();
+        Task<IEnumerable<Game>> GetGamesAsync(int tournamentId);
         Task<Game?> GetGameAsync(int id);
         Task<bool> AnyGameAsync(int id);
         void AddGame(Game game);
         void UpdateGame(Game game);
         void RemoveGame(Game game);
 
-        Task<IEnumerable<Game>> GetAllByTournamentIdAsync(int tournamentId);
+        //Task<IEnumerable<Game>> GetAllByTournamentIdAsync(int tournamentId);
 
     }
 }

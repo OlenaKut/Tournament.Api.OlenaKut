@@ -30,7 +30,7 @@ namespace Tournament.Data.Repositories
             return await _context.TournamentDetails.FindAsync(id);
         }
 
-        public async Task<bool> AnyAsync(int id)
+        public async Task<bool> TournamentExistAsync(int id)
         {
             return await _context.TournamentDetails.AnyAsync(t => t.Id == id);
         }
@@ -48,11 +48,6 @@ namespace Tournament.Data.Repositories
         public void Remove(TournamentDetails tournament)
         {
             _context.TournamentDetails.Remove(tournament); 
-        }
-
-        public async Task<bool> TournamentExistAsync(int id)
-        {
-            return await _context.TournamentDetails.AllAsync(t => t.Id == id);
         }
 
         public async Task<TournamentDetails?> GetTournamentWithGamesAsync(int id)

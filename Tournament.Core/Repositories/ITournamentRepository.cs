@@ -12,13 +12,10 @@ namespace Tournament.Core.Repositories
     {
         Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeGames);
         Task<TournamentDetails?> GetAsync(int id);
-        Task<bool> AnyAsync(int id);
+        Task<bool> TournamentExistAsync(int id);
         void Add(TournamentDetails tournament);
         void Update(TournamentDetails tournament);
         void Remove(TournamentDetails tournament);
-
-        Task<bool> TournamentExistAsync(int id);
-
         Task<TournamentDetails?> GetTournamentWithGamesAsync(int id);
 
 

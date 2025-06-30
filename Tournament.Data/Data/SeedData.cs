@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
+using Tournament.Data.Migrations;
 
 namespace Tournament.Data.Data
 {
@@ -29,33 +32,48 @@ namespace Tournament.Data.Data
                 try
                 {
                     var tournaments = GenerateTournaments(5);
-                    db.AddRange(tournaments);
+                    db.TournamentDetails.AddRange(tournaments);
+                    await db.SaveChangesAsync();
+
+                    foreach (var tournament in tournaments)
+                    {
+                        var games = GenerateGames(3, tournament.Id);
+                        tournament.Games?.AddRange(games);
+                        db.Game.AddRange(games);
+                    }
+
                     await db.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw new Exception("Error seeding data: " + ex.Message, ex);
                 }
 
             }
         }
 
-        private static List<TournamentDetails> GenerateTournaments(int nrOfTournaments)
+        private static List<TournamentDetails> GenerateTournaments(int count)
         {
-            var tournamentFaker = new Faker<TournamentDetails>("sv")
-                .RuleFor(t => t.Title, f => f.Lorem.Word() + " Championship")
-                .RuleFor(t => t.StartGame, f => f.Date.Future())
-                .RuleFor(t => t.Games, (f, t) =>
-                {
-                    var gameFaker = new Faker<Game>("sv")
-                        .RuleFor(g => g.Title, f2 => f2.Lorem.Word())
-                        .RuleFor(g => g.Time, f2 => f2.Date.Between(t.StartGame, t.StartGame.AddMonths(3)));
-                        //.RuleFor(g => g.TournamentDetails, _ => t); // ✅ link back to parent tournament
+            var faker = new Faker<TournamentDetails>("sv").Rules((f, t) =>
+            {
+                t.Title = f.Lorem.Word().ToUpper() + " Championship";
+                t.StartGame = f.Date.Future();
+                t.EndGame = t.StartGame.AddMonths(3);
+                t.Games = new List<Game>();
+            });
 
-                    return gameFaker.Generate(f.Random.Int(3, 6));
-                });
+            return faker.Generate(count);
+        }
 
-            return tournamentFaker.Generate(nrOfTournaments);
+        private static ICollection<Game> GenerateGames(int count, int tournamentId)
+        {
+            var faker = new Faker<Game>("sv").Rules((f, g) =>
+            {
+                g.Title = f.Lorem.Word().ToUpper();
+                g.Time = f.Date.Future();
+                g.TournamentId = tournamentId;
+            });
+            return faker.Generate(count);
         }
     }
 }

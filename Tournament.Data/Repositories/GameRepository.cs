@@ -18,11 +18,10 @@ namespace Tournament.Data.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Game>> GetGamesAsync()
+        public async Task<IEnumerable<Game>> GetGamesAsync(int tournamentId)
         {
-            return await _context.Game.ToListAsync();
+            return await _context.Game.Where(g => g.TournamentId == tournamentId).ToListAsync();
         }
-
         public async Task<Game?> GetGameAsync(int id)
         {
             return await _context.Game.FindAsync(id);
@@ -47,11 +46,11 @@ namespace Tournament.Data.Repositories
             _context.Game.Remove(game);
         }
 
-        public async Task<IEnumerable<Game>> GetAllByTournamentIdAsync(int tournamentId)
-        {
-            return await _context.Game
-                .Where(g => g.TournamentId == tournamentId)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<Game>> GetByTournamentIdAsync(int tournamentId)
+        //{
+        //    return await _context.Game
+        //        .Where(g => g.TournamentId == tournamentId)
+        //        .ToListAsync();
+        //}
     }
 }

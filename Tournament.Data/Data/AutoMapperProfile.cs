@@ -15,9 +15,10 @@ namespace Tournament.Data.Data
         public AutoMapperProfile()
         {
             CreateMap<TournamentDetails, TournamentDto>().ReverseMap();
-            CreateMap<Game, GameDto>().ReverseMap();
             CreateMap<TournamentCreateDto, TournamentDetails>();
             CreateMap<TournamentUpdateDto, TournamentDetails>();
+            CreateMap<Game, GameDto>().ReverseMap();
+            CreateMap<GameCreateDto, Game>();
 
         }
     }
