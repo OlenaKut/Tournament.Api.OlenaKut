@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Tournament.Core.DTOs;
@@ -31,7 +32,7 @@ namespace Tournament.Api.Controllers
 
         // GET: api/Games
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameDto>>> GetGames(int tournamentId)
+        public async Task<ActionResult<IEnumerable<GameDto>>> GetGames(int tournamentId, string? sortBy = null)
         {
             //return await _context.Game.ToListAsync();
             var tournamenExist = await _unitOfWork.TournamentRepository.TournamentExistAsync(tournamentId);
@@ -42,6 +43,14 @@ namespace Tournament.Api.Controllers
             }
 
             var games = await _unitOfWork.GameRepository.GetGamesAsync(tournamentId);
+
+            games = sortBy?.ToLower() switch
+            {
+                "title" => games.OrderBy(t => t.Title),
+                "start" => games.OrderBy(t => t.Time),
+                _ => games
+            };
+
             var gamesDto = _mapper.Map<IEnumerable<GameDto>>(games);
 
             return Ok(gamesDto);
