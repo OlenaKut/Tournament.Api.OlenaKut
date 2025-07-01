@@ -25,6 +25,20 @@ namespace Tournament.Data.Repositories
                 : await _context.TournamentDetails.ToListAsync();
         }
 
+        public async Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                return await GetAllAsync(true);
+            }
+
+            title = title.Trim();
+            return await _context.TournamentDetails
+                .Where(t => t.Title == title)
+                .OrderBy(t => t.Title)
+                .ToListAsync();
+        }
+
         public async Task<TournamentDetails?> GetAsyncWithGames(int id, bool includeGames)
         {
      

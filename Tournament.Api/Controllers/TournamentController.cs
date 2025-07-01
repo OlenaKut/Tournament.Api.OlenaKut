@@ -54,6 +54,15 @@ namespace Tournament.Api.Controllers
             return Ok(tournaments);
         }
 
+       // GET filtered
+       [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetFilteredAsync(string? title)
+        {
+            var tournaments = await _unitOfWork.TournamentRepository.GetFilteredAsync(title);
+            var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
+            return Ok(dto);
+        }
+
         // GET: api/Tournament/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TournamentDto>> GetTournamentDetails(int id, bool includeGames)

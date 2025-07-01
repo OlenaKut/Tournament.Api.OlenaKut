@@ -11,6 +11,7 @@ namespace Tournament.Core.Repositories
     public interface ITournamentRepository
     {
         Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeGames);
+        Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title);
         Task<TournamentDetails?> GetAsync(int id);
         Task<TournamentDetails?> GetAsyncWithGames(int id, bool includeGames);
         Task<bool> TournamentExistAsync(int id);

@@ -12,6 +12,11 @@ namespace Tournament.Api
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Enable console logging
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
             builder.Services.AddDbContext<TournamentApiContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TournamentApiContext") ?? throw new InvalidOperationException("Connection string 'TournamentApiContext' not found.")));
 
