@@ -54,11 +54,17 @@ namespace Tournament.Api.Controllers
             return Ok(tournaments);
         }
 
-       // GET filtered
-       [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetFilteredAsync(string? title)
+       // GET filtering and searching
+       [HttpGet("Filter")]
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetFilteredAsync(string? title, string? searchQuery)
         {
-            var tournaments = await _unitOfWork.TournamentRepository.GetFilteredAsync(title);
+            var tournaments = await _unitOfWork.TournamentRepository.GetFilteredAsync(title, searchQuery);
+
+            if (tournaments == null || !tournaments.Any())
+            {
+                return NotFound("Tournament(s) not found");
+            }
+
             var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
             return Ok(dto);
         }

@@ -25,18 +25,42 @@ namespace Tournament.Data.Repositories
                 : await _context.TournamentDetails.ToListAsync();
         }
 
-        public async Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title)
+
+        // Filtering by title
+        //Searching via collection
+        public async Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title, string? searchQuery)
         {
-            if (string.IsNullOrEmpty(title))
+            if (string.IsNullOrEmpty(title)
+                && string.IsNullOrWhiteSpace(searchQuery))
             {
                 return await GetAllAsync(true);
             }
 
-            title = title.Trim();
-            return await _context.TournamentDetails
-                .Where(t => t.Title == title)
-                .OrderBy(t => t.Title)
-                .ToListAsync();
+            //Collection to start with
+            var collection = _context.TournamentDetails as IQueryable<TournamentDetails>;
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                var trimmed = title.Trim();
+                collection = collection.Where(t => t.Title.Contains(trimmed));
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(a => 
+                a.Title.Contains(searchQuery) || 
+                (a.StartGame != null && a.StartGame.ToString().Contains(searchQuery)));
+            }
+          
+            return await collection.OrderBy(t => t.Title).ToListAsync();
+
+            //title = title.Trim();
+            //return await _context.TournamentDetails
+            //    .Where(t => t.Title == title)
+            //    .OrderBy(t => t.Title)
+            //    .ToListAsync();
         }
 
         public async Task<TournamentDetails?> GetAsyncWithGames(int id, bool includeGames)
