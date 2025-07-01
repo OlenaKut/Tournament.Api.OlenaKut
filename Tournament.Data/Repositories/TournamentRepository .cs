@@ -7,6 +7,7 @@ using Tournament.Core.Repositories;
 using Tournament.Data.Data;
 using Tournament.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Tournament.Services;
 
 
 namespace Tournament.Data.Repositories
@@ -28,13 +29,16 @@ namespace Tournament.Data.Repositories
 
         // Filtering by title
         //Searching via collection
-        public async Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title, string? searchQuery)
+        public async Task<(IEnumerable<TournamentDetails>, PaginationMetadata)> GetFilteredAsync(
+            string? title, string? searchQuery, int pageNumber, int pageSize)
         {
-            if (string.IsNullOrEmpty(title)
-                && string.IsNullOrWhiteSpace(searchQuery))
-            {
-                return await GetAllAsync(true);
-            }
+
+            //Returns all tournaments if no filters and searching
+            //if (string.IsNullOrEmpty(title)
+            //    && string.IsNullOrWhiteSpace(searchQuery))
+            //{
+            //    return await GetAllAsync(true);
+            //}
 
             //Collection to start with
             var collection = _context.TournamentDetails as IQueryable<TournamentDetails>;
@@ -53,8 +57,16 @@ namespace Tournament.Data.Repositories
                 a.Title.Contains(searchQuery) || 
                 (a.StartGame != null && a.StartGame.ToString().Contains(searchQuery)));
             }
+
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
           
-            return await collection.OrderBy(t => t.Title).ToListAsync();
+            var collectionToReturn = await collection.OrderBy(t => t.Title)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (collectionToReturn, paginationMetadata);
 
             //title = title.Trim();
             //return await _context.TournamentDetails

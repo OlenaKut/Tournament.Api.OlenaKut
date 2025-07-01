@@ -4,11 +4,13 @@ using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
@@ -26,6 +28,7 @@ namespace Tournament.Api.Controllers
         //private readonly TournamentApiContext _context;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        const int maxTournamentPageSize = 15;
 
         public TournamentController(IMapper mapper, IUnitOfWork unitOfWork)
         {
@@ -56,9 +59,18 @@ namespace Tournament.Api.Controllers
 
        // GET filtering and searching
        [HttpGet("Filter")]
-        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetFilteredAsync(string? title, string? searchQuery)
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetFilteredAsync(string? title, string? searchQuery, int pageNumber = 1, int pageSize = 10)
         {
-            var tournaments = await _unitOfWork.TournamentRepository.GetFilteredAsync(title, searchQuery);
+            if (pageSize > maxTournamentPageSize)
+            {
+                pageSize = maxTournamentPageSize;
+            }
+
+            var (tournaments, paginationMetadata) = await _unitOfWork.TournamentRepository
+                .GetFilteredAsync(title, searchQuery, pageNumber, pageSize);
+
+            Response.Headers.Append("X-Pagination",
+                JsonSerializer.Serialize(paginationMetadata));
 
             if (tournaments == null || !tournaments.Any())
             {

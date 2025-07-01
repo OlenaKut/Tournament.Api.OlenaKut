@@ -5,13 +5,15 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.Entities;
+using Tournament.Services;
 
 namespace Tournament.Core.Repositories
 {
     public interface ITournamentRepository
     {
         Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeGames);
-        Task<IEnumerable<TournamentDetails>> GetFilteredAsync(string? title,string? searchQuery);
+        Task<(IEnumerable<TournamentDetails>, PaginationMetadata)> GetFilteredAsync(
+            string? title,string? searchQuery, int pageNumber, int pageSize);
         Task<TournamentDetails?> GetAsync(int id);
         Task<TournamentDetails?> GetAsyncWithGames(int id, bool includeGames);
         Task<bool> TournamentExistAsync(int id);
