@@ -37,8 +37,14 @@ namespace Tournament.Data.Data
 
                     foreach (var tournament in tournaments)
                     {
-                        var games = GenerateGames(3, tournament.Id);
-                        tournament.Games?.AddRange(games);
+                        var games = GenerateNonOverlappingGames(
+                            tournament.StartGame,
+                            tournament.EndGame,
+                            count: 3,
+                            tournament.Id,
+                            tournament
+                            );
+                        //tournament.Games?.AddRange(games);
                         db.Game.AddRange(games);
                     }
 
@@ -65,15 +71,49 @@ namespace Tournament.Data.Data
             return faker.Generate(count);
         }
 
-        private static ICollection<Game> GenerateGames(int count, int tournamentId)
+        private static List<Game> GenerateNonOverlappingGames(DateTime start, DateTime end, int count, int tournamentId, TournamentDetails tournament)
         {
-            var faker = new Faker<Game>("sv").Rules((f, g) =>
+            var games = new List<Game>();
+            var totalDays = (end - start).Days;
+
+            if (totalDays <= 0 || count > totalDays)
             {
-                g.Title = f.Lorem.Word().ToUpper();
-                g.Time = f.Date.Future();
-                g.TournamentId = tournamentId;
-            });
-            return faker.Generate(count);
+                throw new ArgumentException("Tournament period is too short for the number of non-overlapping games.");
+
+            }
+            var faker = new Faker();
+            var usedDates = new List<DateTime>();
+
+            while (games.Count < count)
+            {
+                var randomDay = faker.Random.Int(0, totalDays -1);
+                var gameDate = start.Date.AddDays(randomDay);
+
+                if (usedDates.Contains(gameDate))
+                    continue;
+                usedDates.Add(gameDate);
+
+                var game = new Game
+                {
+                    Title = faker.Lorem.Word().ToUpper(),
+                    Time = gameDate,
+                    TournamentId = tournamentId,
+                    TournamentDetails = tournament
+                };
+                games.Add(game);
+            }
+            return games;
         }
+
+        //private static ICollection<Game> GenerateGames(int count, int tournamentId)
+        //{
+        //    var faker = new Faker<Game>("sv")
+        //        g.Title = f.Lorem.Word().ToUpper();
+        //        g.Time = f.Date.Future();.Rules((f, g) =>
+        //    {
+        //        g.TournamentId = tournamentId;
+        //    });
+        //    return faker.Generate(count);
+        //}
     }
 }
