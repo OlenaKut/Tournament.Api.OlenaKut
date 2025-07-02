@@ -62,7 +62,7 @@ namespace Tournament.Api.Controllers
         {
             var game = await _unitOfWork.GameRepository.GetGameAsync(id);
 
-            if (game == null || game.TournamentId != tournamentId)
+            if (game == null || game.TournamentDetailsId != tournamentId)
             {
                 return NotFound();
             }
@@ -130,12 +130,16 @@ namespace Tournament.Api.Controllers
             }
 
             var game = _mapper.Map<Game>(dto);
-            game.TournamentId = tournamentId;
+            game.TournamentDetailsId = tournamentId;
 
             _unitOfWork.GameRepository.AddGame(game);
             await _unitOfWork.CompleteAsync();
 
-            return CreatedAtAction(nameof(GetGame), new { id = game.Id }, game);
+            return CreatedAtAction(
+                nameof(GetGame),
+                new { tournamentId = game.TournamentDetailsId, id = game.Id },
+                _mapper.Map<GameDto>(game)
+            );
         }
 
         // DELETE: api/Games/5
@@ -168,7 +172,7 @@ namespace Tournament.Api.Controllers
 
             var gameToPatch = await _unitOfWork.GameRepository.GetGameAsync(id);
 
-            if (gameToPatch == null || gameToPatch.TournamentId != tournamentId)
+            if (gameToPatch == null || gameToPatch.TournamentDetailsId != tournamentId)
                 return NotFound("Game does not exist in this tournament");
 
             var dto = _mapper.Map<GameUpdateDto>(gameToPatch);

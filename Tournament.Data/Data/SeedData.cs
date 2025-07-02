@@ -97,7 +97,7 @@ namespace Tournament.Data.Data
                 {
                     Title = faker.Lorem.Word().ToUpper(),
                     Time = gameDate,
-                    TournamentId = tournamentId,
+                    TournamentDetailsId = tournamentId,
                     TournamentDetails = tournament
                 };
                 games.Add(game);

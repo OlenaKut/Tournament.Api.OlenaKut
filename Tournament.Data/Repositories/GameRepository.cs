@@ -20,7 +20,7 @@ namespace Tournament.Data.Repositories
         }
         public async Task<IEnumerable<Game>> GetGamesAsync(int tournamentId)
         {
-            return await _context.Game.Where(g => g.TournamentId == tournamentId).ToListAsync();
+            return await _context.Game.Where(g => g.TournamentDetailsId == tournamentId).ToListAsync();
         }
         public async Task<Game?> GetGameAsync(int id)
         {
@@ -30,7 +30,7 @@ namespace Tournament.Data.Repositories
         public async Task<Game?> GetGameByTitleAsync(int tournamentId, string title)
         {
             return await _context.Game
-                .FirstOrDefaultAsync(g => g.TournamentId == tournamentId && g.Title.ToUpper() == title.ToUpper());
+                .FirstOrDefaultAsync(g => g.TournamentDetailsId == tournamentId && g.Title.ToUpper() == title.ToUpper());
         }
 
         public async Task<bool> AnyGameAsync(int id)
