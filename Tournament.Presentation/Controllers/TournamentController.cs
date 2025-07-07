@@ -25,17 +25,17 @@ namespace Tournament.Presentation.Controllers
     public class TournamentController : ControllerBase
     {
         //private readonly TournamentApiContext _context;
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IMapper _mapper;
+        //private readonly IUnitOfWork _unitOfWork;
         private readonly IServiceManager _serviceManager;
 
         const int maxTournamentPageSize = 15;
 
-        public TournamentController(IMapper mapper, IUnitOfWork unitOfWork, IServiceManager serviceManager)
+        public TournamentController(IServiceManager serviceManager)
         {
             //_context = context;
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            //_mapper = mapper;
+            //_unitOfWork = unitOfWork;
             _serviceManager = serviceManager;
         }
 
@@ -156,8 +156,7 @@ namespace Tournament.Presentation.Controllers
 
             //return NoContent();
 
-            if (id != dto.Id)
-                return BadRequest("ID mismatch");
+            if (id != dto.Id) BadRequest("ID mismatch");
 
             var success = await _serviceManager.TournamentService.UpdateAsync(id, dto);
 

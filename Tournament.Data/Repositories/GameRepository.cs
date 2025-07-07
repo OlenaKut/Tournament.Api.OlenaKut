@@ -22,6 +22,7 @@ namespace Tournament.Data.Repositories
         {
             return await _context.Game.Where(g => g.TournamentDetailsId == tournamentId).ToListAsync();
         }
+
         public async Task<Game?> GetGameAsync(int id)
         {
             return await _context.Game.FindAsync(id);
