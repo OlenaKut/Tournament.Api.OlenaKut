@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tournament.Core.DTOs
+namespace Tournament.Presentation
 {
-    public record GameUpdateDto : GameForManipulationDto
+    internal class AssemblyReference
     {
-        public int Id { get; set; }
+        //Contains nothing
     }
 }

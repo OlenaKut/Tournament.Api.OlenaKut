@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tournament.Core.DTOs
 {
-    public class TournamentForManipulationDto
+    public record TournamentForManipulationDto
     {
         [Required(ErrorMessage = "Title is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]

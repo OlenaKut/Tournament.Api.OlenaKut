@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tournament.Core.DTOs
+namespace Services.Contracts
 {
-    public record GameUpdateDto : GameForManipulationDto
+    public interface IGameService
     {
-        public int Id { get; set; }
     }
 }

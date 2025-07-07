@@ -1,9 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Tournament.Data.Data;
+using Services.Contracts;
+using System.Reflection;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Tournament.Data.Repositories;
+using Tournament.Api.Extensions;
 using Tournament.Core.Repositories;
+using Tournament.Data.Data;
+using Tournament.Data.Repositories;
+using Tournament.Services;
+using Tournament.Presentation;
 
 namespace Tournament.Api
 {
@@ -24,14 +30,22 @@ namespace Tournament.Api
 
             builder.Services.AddControllers(opt => opt.ReturnHttpNotAcceptable = true)
                 .AddNewtonsoftJson()
-                .AddXmlDataContractSerializerFormatters();
+                //.AddXmlDataContractSerializerFormatters()
+                .AddApplicationPart(typeof(AssemblyReference).Assembly);
+
+            //builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.ConfigureCors();
+            builder.Services.ConfigureServiceLayerServices();
+            builder.Services.ConfigureRepositories();
 
 
             var app = builder.Build();

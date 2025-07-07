@@ -86,7 +86,7 @@ namespace Tournament.Data.Repositories
 
         public async Task<TournamentDetails?> GetAsync(int id)
         {
-          return await _context.TournamentDetails.FindAsync(id);
+            return await _context.TournamentDetails.FindAsync(id);
         }
 
         public async Task<bool> TournamentExistAsync(int id)

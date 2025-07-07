@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.Entities;
 using Tournament.Services;
-
 namespace Tournament.Core.Repositories
 {
     public interface ITournamentRepository

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,11 +10,8 @@ using System.Threading.Tasks;
 using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
-using Tournament.Data.Data;
-using Tournament.Data.Migrations;
-using Tournament.Data.Repositories;
 
-namespace Tournament.Api.Controllers
+namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournament/{tournamentId}/Games")]
     [ApiController]
