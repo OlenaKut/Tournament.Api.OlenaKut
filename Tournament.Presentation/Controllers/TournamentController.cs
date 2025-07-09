@@ -129,7 +129,7 @@ namespace Tournament.Presentation.Controllers
             //return dto;
             TournamentDto dto = await _serviceManager.TournamentService.GetAsyncWithGames(id, includeGames);
 
-            if (dto == null) NotFound("Tournament not found");
+            if (dto == null) return NotFound("Tournament not found");
 
             return Ok(dto);
         }
@@ -156,7 +156,7 @@ namespace Tournament.Presentation.Controllers
 
             //return NoContent();
 
-            if (id != dto.Id) BadRequest("ID mismatch");
+            if (id != dto.Id) return BadRequest("ID mismatch");
 
             var success = await _serviceManager.TournamentService.UpdateAsync(id, dto);
 

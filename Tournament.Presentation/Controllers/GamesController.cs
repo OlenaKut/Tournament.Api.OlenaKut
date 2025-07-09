@@ -52,7 +52,7 @@ namespace Tournament.Presentation.Controllers
 
             //return Ok(gamesDto);
             var tournamenExist = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
-            if (!tournamenExist) NotFound("Tournament not found");
+            if (!tournamenExist) return NotFound("Tournament not found");
 
             var games = await _serviceManager.GameService.GetGamesAsync(tournamentId);
 
@@ -116,11 +116,11 @@ namespace Tournament.Presentation.Controllers
                 return BadRequest("Title must be provided.");
             }
             var tournamentExists = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
-            if (!tournamentExists) NotFound("Tournament not found");
+            if (!tournamentExists) return NotFound("Tournament not found");
 
             var game = await _serviceManager.GameService.GetGameByTitleAsync(tournamentId, title);
 
-            if (game == null) NotFound($"No game with title '{title}' found in this tournament.");
+            if (game == null) return NotFound($"No game with title '{title}' found in this tournament.");
 
             return Ok(game);
         }
@@ -146,10 +146,10 @@ namespace Tournament.Presentation.Controllers
             //await _unitOfWork.CompleteAsync();
 
             //return NoContent();
-            if (id != dto.Id) BadRequest();
+            if (id != dto.Id) return BadRequest("ID mismatch");
 
             var updatedGame = await _serviceManager.GameService.UpdateGameAsync(id, dto);
-            if (!updatedGame) NotFound("Game not found");
+            if (!updatedGame) return NotFound("Game not found");
             return NoContent();
 
         }
@@ -177,7 +177,7 @@ namespace Tournament.Presentation.Controllers
             //    _mapper.Map<GameDto>(game)
             //);
             var tournamentExists = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
-            if (!tournamentExists) NotFound("Tournament not found.");
+            if (!tournamentExists) return NotFound("Tournament not found.");
 
             var createdGame = await _serviceManager.GameService.GreateGameAsync(tournamentId, dto);
             return CreatedAtAction(nameof(GetGameAsync), new
@@ -204,7 +204,7 @@ namespace Tournament.Presentation.Controllers
             //return NoContent();
 
             var deleteGame = await _serviceManager.GameService.DeleteGameAsync(id);
-            if (!deleteGame) NotFound("Game not found");
+            if (!deleteGame) return NotFound("Game not found");
             return NoContent();
         }
 
@@ -236,13 +236,13 @@ namespace Tournament.Presentation.Controllers
 
             //return NoContent();
 
-            if (patchDocument == null) BadRequest("No patchdocument");
+            if (patchDocument == null) return BadRequest("No patchdocument");
 
             var tournamentExists = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
-            if (!tournamentExists)  NotFound("Tournament not found");
+            if (!tournamentExists) return NotFound("Tournament not found");
 
             var game = await _serviceManager.GameService.GetGameAsync(id);
-            if (game == null || game.TournamentDetailsId != tournamentId) NotFound("Game not found in this tournament.");
+            if (game == null || game.TournamentDetailsId != tournamentId) return NotFound("Game not found in this tournament.");
 
             var gameUpdateDto = new GameUpdateDto
             {

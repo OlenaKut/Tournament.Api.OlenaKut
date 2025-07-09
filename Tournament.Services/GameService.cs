@@ -48,6 +48,12 @@ namespace Tournament.Services
 
         public async Task<GameDto> GreateGameAsync(int tournamentId, GameCreateDto dto)
         {
+            var existingGames = await _unitOfWork.GameRepository.GetGamesAsync(tournamentId);
+
+            if (existingGames.Count() >= 10)
+            {
+                throw new InvalidOperationException("Cannot add more than 10 games to a single tournament.");
+            }
             var game = _mapper.Map<Game>(dto);
             game.TournamentDetailsId = tournamentId;
             
@@ -60,7 +66,7 @@ namespace Tournament.Services
         public async Task<bool> UpdateGameAsync(int id, GameUpdateDto dto)
         {
             var game = await _unitOfWork.GameRepository.GetGameAsync(id);
-            if (game != null) return false;
+            if (game == null) return false;
 
             _mapper.Map(dto, game);
             
@@ -73,7 +79,7 @@ namespace Tournament.Services
         public async Task<bool> DeleteGameAsync(int id)
         {
             var game = await _unitOfWork.GameRepository.GetGameAsync(id);
-            if (game != null) return false;
+            if (game == null) return false;
 
             _unitOfWork.GameRepository.RemoveGame(game);
             await _unitOfWork.CompleteAsync();
