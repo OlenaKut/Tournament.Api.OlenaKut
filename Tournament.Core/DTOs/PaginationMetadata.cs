@@ -1,4 +1,4 @@
-﻿namespace Tournament.Services
+﻿namespace Tournament.Core.DTOs
 {
     public class PaginationMetadata
     {

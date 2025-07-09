@@ -7,7 +7,7 @@ using Tournament.Core.Repositories;
 using Tournament.Data.Data;
 using Tournament.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Tournament.Services;
+using Tournament.Core.DTOs;
 
 
 namespace Tournament.Data.Repositories

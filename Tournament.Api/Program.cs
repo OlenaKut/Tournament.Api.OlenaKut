@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Contracts;
@@ -5,11 +6,12 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Tournament.Api.Extensions;
+using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
 using Tournament.Data.Data;
 using Tournament.Data.Repositories;
-using Tournament.Services;
 using Tournament.Presentation;
+using Tournament.Services;
 
 namespace Tournament.Api
 {
@@ -47,6 +49,20 @@ namespace Tournament.Api
             builder.Services.ConfigureServiceLayerServices();
             builder.Services.ConfigureRepositories();
 
+            builder.Services.AddDataProtection();
+
+            builder.Services.AddIdentityCore<ApplicationUser>(opt =>
+            {
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredLength = 3;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<TournamentApiContext>()
+                .AddDefaultTokenProviders();
+
 
             var app = builder.Build();
 
@@ -60,6 +76,7 @@ namespace Tournament.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

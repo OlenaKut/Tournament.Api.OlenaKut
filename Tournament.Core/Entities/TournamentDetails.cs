@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,10 @@ namespace Tournament.Core.Entities
         public DateTime StartGame { get; set; }
         public DateTime EndGame { get; set; }
         public List<Game>? Games { get; set; } = null!;
+
+        public string? ApplicationUserId { get; set; }
+        [ForeignKey(nameof(ApplicationUserId))]
+        public ApplicationUser? ApplicationUser { get; set; }
 
     }
 }
