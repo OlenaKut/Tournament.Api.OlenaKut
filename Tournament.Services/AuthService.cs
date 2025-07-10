@@ -16,6 +16,7 @@ namespace Tournament.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private ApplicationUser? user;
 
         public AuthService(IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -43,6 +44,17 @@ namespace Tournament.Services
                     await _userManager.AddToRoleAsync(user, userForRegistrationDto.Role);
                 }
             return result;
+        }
+
+        public async Task<bool> ValidateUserAsync(UserForAuthenticationDto userForAuthenticationDto)
+        {
+            if (userForAuthenticationDto == null)
+            {
+                throw new ArgumentNullException(nameof(userForAuthenticationDto));
+            }
+
+            user = await _userManager.FindByEmailAsync(userForAuthenticationDto.Email);
+            return user != null && await _userManager.CheckPasswordAsync(user, userForAuthenticationDto.Password);
         }
 
     }

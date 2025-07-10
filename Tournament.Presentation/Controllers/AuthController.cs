@@ -27,5 +27,15 @@ namespace Tournament.Presentation.Controllers
             var result = await _serviceManager.AuthService.RegisterUserAsync(userForRegistrationDto);
             return result.Succeeded ? StatusCode(StatusCodes.Status201Created) : BadRequest(result.Errors);
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult> Login(UserForAuthenticationDto userForAuthenticationDto)
+        {
+            if (!await _serviceManager.AuthService.ValidateUserAsync(userForAuthenticationDto))
+            {
+                return Unauthorized("Invalid Authentication");
+            }
+            return Ok();
+        }
     }
 }
