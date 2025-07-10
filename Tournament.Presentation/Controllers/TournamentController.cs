@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -137,6 +138,7 @@ namespace Tournament.Presentation.Controllers
         // PUT: api/Tournament/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutTournamentDetails(int id, TournamentUpdateDto dto)
         {
             //if (id != dto.Id)

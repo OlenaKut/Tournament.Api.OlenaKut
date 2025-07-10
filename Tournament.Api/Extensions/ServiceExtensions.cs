@@ -23,11 +23,13 @@ namespace Tournament.Api.Extensions
             services.AddScoped<IServiceManager, ServiceManager>();
             services.AddScoped<ITournamentService, TournamentService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             //services.AddLazy<ITournamentService>();
 
             services.AddScoped(provider => new Lazy<ITournamentService>(() => provider.GetRequiredService<ITournamentService>()));
             services.AddScoped(provider => new Lazy<IGameService>(() => provider.GetRequiredService<IGameService>()));
+            services.AddScoped(provider => new Lazy<IAuthService>(() => provider.GetRequiredService<IAuthService>()));
 
         }
 
