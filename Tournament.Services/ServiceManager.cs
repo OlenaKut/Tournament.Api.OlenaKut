@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Services.Contracts;
 using System;
 using System.Collections.Generic;
@@ -23,14 +24,14 @@ namespace Tournament.Services
         public IGameService GameService => gameService.Value;
         public IAuthService AuthService => authService.Value;
 
-        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration config)
         {
             ArgumentNullException.ThrowIfNull(nameof(unitOfWork));
 
             tournamentService = new Lazy<ITournamentService>(() => new TournamentService(unitOfWork, mapper));
             gameService = new Lazy<IGameService>(() => new GameService(unitOfWork, mapper));
 
-            authService = new Lazy<IAuthService>(() => new AuthService(mapper, userManager, roleManager));
+            authService = new Lazy<IAuthService>(() => new AuthService(mapper, userManager, roleManager, config));
         }
 
         //public ServiceManager(Lazy<ITournamentService> tournamentService, Lazy<IGameService> gameService, Lazy<IAuthService> authService)

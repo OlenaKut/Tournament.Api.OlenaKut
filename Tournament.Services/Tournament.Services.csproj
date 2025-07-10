@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.7" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Service.Contracts\Services.Contracts.csproj" />
 		<ProjectReference Include="..\Tournament.Core\Tournament.Core.csproj" />

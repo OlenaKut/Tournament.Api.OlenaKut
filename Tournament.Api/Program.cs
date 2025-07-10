@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Services.Contracts;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Threading.Tasks;
 using Tournament.Api.Extensions;
 using Tournament.Core.Entities;
@@ -30,7 +33,16 @@ namespace Tournament.Api
 
             // Add services to the container.
 
-            builder.Services.AddControllers(opt => opt.ReturnHttpNotAcceptable = true)
+            builder.Services.AddControllers(configure =>
+            {
+                configure.ReturnHttpNotAcceptable = true;
+                //// Everyone must be the Admin
+                //var policy = new AuthorizationPolicyBuilder()
+                //            .RequireAuthenticatedUser()
+                //            .RequireRole("Admin")
+                //            .Build();
+                //configure.Filters.Add(new AuthorizeFilter(policy));
+            })
                 .AddNewtonsoftJson()
                 //.AddXmlDataContractSerializerFormatters()
                 .AddApplicationPart(typeof(AssemblyReference).Assembly);
@@ -49,6 +61,8 @@ namespace Tournament.Api
             builder.Services.ConfigureServiceLayerServices();
             builder.Services.ConfigureRepositories();
 
+            builder.Services.ConfigureJwt(builder.Configuration);
+
             builder.Services.AddDataProtection();
 
             builder.Services.AddIdentityCore<ApplicationUser>(opt =>
@@ -58,13 +72,27 @@ namespace Tournament.Api
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequiredLength = 3;
+                opt.User.RequireUniqueEmail = true;
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<TournamentApiContext>()
                 .AddDefaultTokenProviders();
 
+            //builder.Services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AdminPolicy", policy =>
+            //        policy.RequireRole("Admin")
+            //        .RequireClaim(ClaimTypes.NameIdentifier)
+            //        .RequireClaim(ClaimTypes.Role));
+
+            //    options.AddPolicy("EmployeePolicy", policy =>
+            //    policy.RequireRole("Employee"));
+            //});
+
 
             var app = builder.Build();
+
+           // app.ConfigureExceptionHandler();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

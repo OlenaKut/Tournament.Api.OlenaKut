@@ -35,7 +35,10 @@ namespace Tournament.Presentation.Controllers
             {
                 return Unauthorized("Invalid Authentication");
             }
-            return Ok();
+            //var token = new { Token = await _serviceManager.AuthService.CreateTokenAsync() };
+
+            TokenDto token = await _serviceManager.AuthService.CreateTokenAsync(expireTime: true);
+            return Ok(token);
         }
     }
 }

@@ -13,5 +13,8 @@ namespace Tournament.Core.Entities
         public string? LastName { get; set; }
 
         public ICollection<TournamentDetails> TournamentDetails { get; set; }
+
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpireTime { get; set; }
     }
 }

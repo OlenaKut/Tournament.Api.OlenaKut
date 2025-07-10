@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
@@ -29,15 +30,17 @@ namespace Tournament.Presentation.Controllers
         //private readonly IMapper _mapper;
         //private readonly IUnitOfWork _unitOfWork;
         private readonly IServiceManager _serviceManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         const int maxTournamentPageSize = 15;
 
-        public TournamentController(IServiceManager serviceManager)
+        public TournamentController(IServiceManager serviceManager, UserManager<ApplicationUser> userManager)
         {
             //_context = context;
             //_mapper = mapper;
             //_unitOfWork = unitOfWork;
             _serviceManager = serviceManager;
+            _userManager = userManager;
         }
 
         //// GET: api/Tournament
@@ -60,8 +63,14 @@ namespace Tournament.Presentation.Controllers
 
         // GET: api/Tournament
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+        //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
+            var auth = User.Identity.IsAuthenticated;
+            var userName = _userManager.GetUserName(User);
+            var user = await _userManager.GetUserAsync(User);
+
             var tournamentDto = await _serviceManager.TournamentService.GetAllAsync(includeGames);
 
             //tournaments = sortBy?.ToLower() switch
@@ -114,6 +123,9 @@ namespace Tournament.Presentation.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
+        //[AllowAnonymous]
+        //[Authorize(Policy = "AdminPolicy")]
         // GET: api/Tournament/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TournamentDto>> GetTournamentDetails(int id, bool includeGames)
