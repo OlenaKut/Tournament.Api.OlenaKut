@@ -21,6 +21,7 @@ namespace Tournament.Core.Entities
         public List<Game>? Games { get; set; } = null!;
 
         public string? ApplicationUserId { get; set; }
+
         [ForeignKey(nameof(ApplicationUserId))]
         public ApplicationUser? ApplicationUser { get; set; }
 

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Services.Contracts;
 using System;
@@ -14,8 +16,9 @@ namespace Tournament.Services
 {
     public class TournamentService : ITournamentService
     {
-        private IUnitOfWork _unitOfWork;
-        private IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        
         public TournamentService(IUnitOfWork unitOfWork, IMapper mapper) 
         {
             _mapper = mapper;
@@ -27,6 +30,8 @@ namespace Tournament.Services
         {
             return _mapper.Map<IEnumerable<TournamentDto>>(await _unitOfWork.TournamentRepository.GetAllAsync(includeGames));
         }
+
+
 
         public async Task<TournamentDto> GetAsyncWithGames(int id, bool includeGames)
         {

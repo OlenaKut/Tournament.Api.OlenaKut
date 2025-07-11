@@ -67,10 +67,10 @@ namespace Tournament.Presentation.Controllers
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
-            var auth = User.Identity.IsAuthenticated;
-            var userName = _userManager.GetUserName(User);
-            var user = await _userManager.GetUserAsync(User);
-
+            //var auth = User.Identity.IsAuthenticated;
+            //var userName = _userManager.GetUserName(User);
+            //var user = await _userManager.GetUserAsync(User);
+           
             var tournamentDto = await _serviceManager.TournamentService.GetAllAsync(includeGames);
 
             //tournaments = sortBy?.ToLower() switch
