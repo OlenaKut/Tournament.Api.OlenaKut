@@ -9,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
+using Tournament.Core.Exceptions;
 using Tournament.Core.Repositories;
+using Tournament.Core.Responses;
 
 namespace Tournament.Services
 {
@@ -24,14 +26,37 @@ namespace Tournament.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GameDto>> GetGamesAsync(int tournamentId)
+        //public async Task<IEnumerable<GameDto>> GetGamesAsync(int tournamentId)
+        //{
+        //    return _mapper.Map<IEnumerable<GameDto>>(await _unitOfWork.GameRepository.GetGamesAsync(tournamentId));
+        //}
+
+        public async Task<ApiBaseResponse> GetGamesAsync(int tournamentId)
         {
-            return _mapper.Map<IEnumerable<GameDto>>(await _unitOfWork.GameRepository.GetGamesAsync(tournamentId));
+            var tournamentExist = await _unitOfWork.TournamentRepository.TournamentExistAsync(tournamentId);
+            if (!tournamentExist)
+            {
+                return new TournamentNotFoundResponse(tournamentId); 
+            }
+
+            var games = await _unitOfWork.GameRepository.GetGamesAsync(tournamentId);
+
+            var gameDto = _mapper.Map<IEnumerable<GameDto>>(games);
+
+            return new ApiOkResponse<IEnumerable<GameDto>>(gameDto);
+
+
         }
 
         public async Task<GameDto> GetGameAsync(int id)
         {
             Game? game = await _unitOfWork.GameRepository.GetGameAsync(id);
+
+            if (game == null)
+            {
+                throw new GameNotFoundException(id);
+            }
+
             return _mapper.Map<GameDto>(game);
         }
 

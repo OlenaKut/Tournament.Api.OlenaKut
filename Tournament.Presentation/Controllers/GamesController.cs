@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
+using Tournament.Core.Responses;
 
 namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournament/{tournamentId}/Games")]
     [ApiController]
     [Produces("application/json")]
-    public class GamesController : ControllerBase
+    public class GamesController : ApiControllerBase
     {
         private readonly IServiceManager _serviceManager;
 
@@ -51,18 +52,34 @@ namespace Tournament.Presentation.Controllers
             //var gamesDto = _mapper.Map<IEnumerable<GameDto>>(games);
 
             //return Ok(gamesDto);
-            var tournamenExist = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
-            if (!tournamenExist) return NotFound("Tournament not found");
+            //var tournamenExist = await _serviceManager.TournamentService.TournamentExistAsync(tournamentId);
+            //if (!tournamenExist) return NotFound("Tournament not found");
 
-            var games = await _serviceManager.GameService.GetGamesAsync(tournamentId);
+            //var games = await _serviceManager.GameService.GetGamesAsync(tournamentId);
+
+            //games = sortBy?.ToLower() switch
+            //{
+            //    "title" => games.OrderBy(t => t.Title),
+            //    "start" => games.OrderBy(t => t.Time),
+            //    _ => games
+            //};
+            //return Ok(games);
+
+            var response = await _serviceManager.GameService.GetGamesAsync(tournamentId);
+
+            if (response is not ApiOkResponse<IEnumerable<GameDto>> okResponse)
+                return ProcessError(response);
+
+            var games = okResponse.Result;
 
             games = sortBy?.ToLower() switch
             {
-                "title" => games.OrderBy(t => t.Title),
-                "start" => games.OrderBy(t => t.Time),
+                "title" => games.OrderBy(g => g.Title),
+                "start" => games.OrderBy(g => g.Time),
                 _ => games
             };
-            return Ok(games);
+
+            return Ok(games);   
         }
 
         // GET: api/Games/5
@@ -77,13 +94,11 @@ namespace Tournament.Presentation.Controllers
             //}
 
             //return game;
-            var game = await _serviceManager.GameService.GetGameAsync(id); 
+            var game = await _serviceManager.GameService.GetGameAsync(id);
 
             if (game == null || game.TournamentDetailsId != tournamentId) return NotFound("Tournament not found");
 
             return Ok(game);
-
-
         }
 
         //GET by title

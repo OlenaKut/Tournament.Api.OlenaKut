@@ -63,7 +63,7 @@ namespace Tournament.Presentation.Controllers
 
         // GET: api/Tournament
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
@@ -123,7 +123,7 @@ namespace Tournament.Presentation.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         //[AllowAnonymous]
         //[Authorize(Policy = "AdminPolicy")]
         // GET: api/Tournament/5

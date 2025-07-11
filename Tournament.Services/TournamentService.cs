@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.DTOs;
 using Tournament.Core.Entities;
+using Tournament.Core.Exceptions;
 using Tournament.Core.Repositories;
 
 namespace Tournament.Services
@@ -36,6 +37,11 @@ namespace Tournament.Services
         public async Task<TournamentDto> GetAsyncWithGames(int id, bool includeGames)
         {
             TournamentDetails ? tournament = await _unitOfWork.TournamentRepository.GetAsyncWithGames(id, includeGames);
+             
+            if (tournament == null)
+            {
+                throw new TournamentNotFoundResponce(id);
+            }
 
             return _mapper.Map<TournamentDto>(tournament);
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Services.Contracts;
 using System.Text;
 using Tournament.Core.Configuration;
@@ -50,14 +51,38 @@ namespace Tournament.Api.Extensions
 
         }
 
-        //public static class ServiceCollectionExtensions
-        //{
-        //    public static IServiceCollection AddLazy<TService>(this IServiceCollection services) where TService : class
-        //    {
-        //        return services.AddScoped(provider => new Lazy<TService>(() => provider.GetRequiredService<TService>()));
-        //    }
 
-        //}
+        // Swagger med tokens
+        public static void ConfigureOpenApi(this IServiceCollection services) =>
+        services.AddEndpointsApiExplorer()
+               .AddSwaggerGen(setup =>
+               {
+                   setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                   {
+                       In = ParameterLocation.Header,
+                       Description = "Place to add JWT with Bearer",
+                       Name = "Authorization",
+                       Type = SecuritySchemeType.Http,
+                       Scheme = "Bearer"
+                   });
+
+                   setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                   {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Id = "Bearer",
+                                    Type = ReferenceType.SecurityScheme
+                                }
+                            },
+                            new List<string>()
+                        }
+                   });
+               });
+
+
 
         public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
         {

@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.DTOs;
+using Tournament.Core.Responses;
 
 namespace Services.Contracts
 {
     public interface IGameService
     {
-        Task<IEnumerable<GameDto>> GetGamesAsync(int tournamentId);
+        Task<ApiBaseResponse> GetGamesAsync(int tournamentId);
         Task<GameDto> GetGameAsync(int id);
         Task<GameDto> GetGameByTitleAsync(int tournamentId, string title);
         Task<bool> AnyGameAsync(int id);
