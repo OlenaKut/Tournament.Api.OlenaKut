@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -84,6 +85,7 @@ namespace Tournament.Api
             //});
             //        });
 
+            builder.Services.ConfigureVersioning();
             builder.Services.ConfigureOpenApi();
 
 
@@ -123,13 +125,6 @@ namespace Tournament.Api
             //    policy.RequireRole("Employee"));
             //});
 
-            //Add versioning
-            builder.Services.AddApiVersioning(setupAction =>
-            {
-                setupAction.ReportApiVersions = true;
-                setupAction.AssumeDefaultVersionWhenUnspecified = true;
-                setupAction.DefaultApiVersion = new ApiVersion(1, 0);
-            }).AddMvc();
 
 
             var app = builder.Build();
@@ -140,7 +135,16 @@ namespace Tournament.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                //app.UseSwaggerUI();
+                app.UseSwaggerUI(setupAction =>
+                {
+                    var descriptions = app.DescribeApiVersions();
+                    foreach (var desc in descriptions)
+                    {
+                        setupAction.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",
+                            desc.GroupName.ToUpperInvariant());
+                    }
+                });
                 await app.SeedDataAsync();
             }
 

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Services.Contracts;
+using System.Reflection;
 using System.Text;
 using Tournament.Core.Configuration;
 using Tournament.Core.Repositories;
@@ -51,12 +54,62 @@ namespace Tournament.Api.Extensions
 
         }
 
+        //Add versioning
+        public static void ConfigureVersioning(this IServiceCollection services)
+        {
+            
+            //var apiVersionDescriptionProvider = services.BuildServiceProvider()
+            //    .GetRequiredService<IApiVersionDescriptionProvider>();
+
+            services.AddApiVersioning(setupAction =>
+            {
+                setupAction.ReportApiVersions = true;
+                setupAction.AssumeDefaultVersionWhenUnspecified = true;
+                setupAction.DefaultApiVersion = new ApiVersion(1, 0);
+            }).AddMvc()
+            .AddApiExplorer(setupAction =>
+            {
+                setupAction.SubstituteApiVersionInUrl = true;
+            }
+            );
+
+        }
 
         // Swagger med tokens
         public static void ConfigureOpenApi(this IServiceCollection services) =>
         services.AddEndpointsApiExplorer()
                .AddSwaggerGen(setup =>
                {
+                   var apiVersionDescriptionProvider = services.BuildServiceProvider()
+               .GetRequiredService<IApiVersionDescriptionProvider>();
+
+                   foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                   {
+                       setup.SwaggerDoc($"{description.GroupName}",
+                           new()
+                           {
+                               Title = "Tournament Info API",
+                               Version = description.ApiVersion.ToString(),
+                               Description = "The Api for Tournament by Olena Kut"
+                           });
+                   }
+
+                   // XML for Tournament.Api
+                   var apiXml = Path.Combine(AppContext.BaseDirectory, "Tournament.Api.xml");
+                   if (File.Exists(apiXml))
+                       setup.IncludeXmlComments(apiXml);
+
+                   // XML for Tournament.Presentation
+                   var presentationXml = Path.Combine(AppContext.BaseDirectory, "Tournament.Presentation.xml");
+                   if (File.Exists(presentationXml))
+                       setup.IncludeXmlComments(presentationXml);
+
+                   //XML for Tournament.Core
+                   var coreXml = Path.Combine(AppContext.BaseDirectory, "Tournament.Core.xml");
+                   if (File.Exists(coreXml))
+                       setup.IncludeXmlComments(coreXml);
+
+
                    setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                    {
                        In = ParameterLocation.Header,

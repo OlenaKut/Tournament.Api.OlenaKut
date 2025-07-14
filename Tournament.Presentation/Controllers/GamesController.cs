@@ -21,7 +21,7 @@ namespace Tournament.Presentation.Controllers
     [Route("api/tournament/{tournamentId}/Games")]
     [ApiController]
     [Produces("application/json")]
-    //[ApiVersion(2)]
+    [ApiVersion(2)]
     //[ApiVersion(1)]
     //[ApiVersion(0.1, Deprecated = true)]
     public class GamesController : ApiControllerBase

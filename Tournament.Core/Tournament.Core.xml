@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tournament.Core</name>
+    </assembly>
+    <members>
+        <member name="P:Tournament.Core.DTOs.TournamentDto.Id">
+            <summary>
+                The Id of the tournament
+            </summary>
+        </member>
+        <member name="P:Tournament.Core.DTOs.TournamentDto.Title">
+            <summary>
+            The Title of the tournament
+            </summary>
+        </member>
+        <member name="P:Tournament.Core.DTOs.TournamentDto.StartGame">
+            <summary>
+            The start of the tournament
+            </summary>
+        </member>
+        <member name="P:Tournament.Core.DTOs.TournamentDto.EndDate">
+            <summary>
+            The end of the tournament
+            </summary>
+        </member>
+        <member name="P:Tournament.Core.DTOs.TournamentDto.Games">
+            <summary>
+            The Games of the tournament
+            </summary>
+        </member>
+    </members>
+</doc>

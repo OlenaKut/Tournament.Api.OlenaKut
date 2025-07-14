@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tournament.Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:Tournament.Presentation.Controllers.TournamentController.GetTournamentDetails(System.Int32,System.Boolean)">
+            <summary>
+            Get the tournament by Id
+            </summary>
+            <param name="id">The Id of the tournament</param>
+            <param name="includeGames">Includes or now the games</param>
+            <returns>A tournament with or without games</returns>
+            
+            <response code="200">Returns the requested tournament</response>
+        </member>
+    </members>
+</doc>

@@ -129,7 +129,22 @@ namespace Tournament.Presentation.Controllers
         //[AllowAnonymous]
         //[Authorize(Policy = "AdminPolicy")]
         // GET: api/Tournament/5
+
+        //XML comments
+        /// <summary>
+        /// Get the tournament by Id
+        /// </summary>
+        /// <param name="id">The Id of the tournament</param>
+        /// <param name="includeGames">Includes or now the games</param>
+        /// <returns>A tournament with or without games</returns>
+        /// 
+        /// <response code="200">Returns the requested tournament</response>
         [HttpGet("{id:int}")]
+        //Describing response types
+        
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TournamentDto>> GetTournamentDetails(int id, bool includeGames)
         {
             //TournamentDetails? tournamentDetails = await _unitOfWork.TournamentRepository.GetAsyncWithGames(id, includeGames);
