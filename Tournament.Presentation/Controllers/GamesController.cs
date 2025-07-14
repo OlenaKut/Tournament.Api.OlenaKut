@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,14 @@ using Tournament.Core.Responses;
 
 namespace Tournament.Presentation.Controllers
 {
+    //Add Api version to the route
+    //[Route("api/v{version:apiVersion}/tournament/{tournamentId}/Games")]
     [Route("api/tournament/{tournamentId}/Games")]
     [ApiController]
     [Produces("application/json")]
+    //[ApiVersion(2)]
+    //[ApiVersion(1)]
+    //[ApiVersion(0.1, Deprecated = true)]
     public class GamesController : ApiControllerBase
     {
         private readonly IServiceManager _serviceManager;

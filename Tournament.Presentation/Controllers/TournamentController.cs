@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace Tournament.Presentation.Controllers
     [ApiController]
     [Route("api/Tournament")]
     [Produces("application/json")]
+    [ApiVersion(1)]
     public class TournamentController : ControllerBase
     {
         //private readonly TournamentApiContext _context;

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -121,6 +122,14 @@ namespace Tournament.Api
             //    options.AddPolicy("EmployeePolicy", policy =>
             //    policy.RequireRole("Employee"));
             //});
+
+            //Add versioning
+            builder.Services.AddApiVersioning(setupAction =>
+            {
+                setupAction.ReportApiVersions = true;
+                setupAction.AssumeDefaultVersionWhenUnspecified = true;
+                setupAction.DefaultApiVersion = new ApiVersion(1, 0);
+            }).AddMvc();
 
 
             var app = builder.Build();
