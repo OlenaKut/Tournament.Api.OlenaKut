@@ -65,6 +65,7 @@ namespace Tournament.Presentation.Controllers
 
         // GET: api/Tournament
         [HttpGet]
+        //[Authorize]
         //[Authorize(Roles = "Admin")]
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)

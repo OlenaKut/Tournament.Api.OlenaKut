@@ -80,6 +80,7 @@ namespace Tournament.Api.Extensions
         services.AddEndpointsApiExplorer()
                .AddSwaggerGen(setup =>
                {
+                   //API Versioning
                    var apiVersionDescriptionProvider = services.BuildServiceProvider()
                .GetRequiredService<IApiVersionDescriptionProvider>();
 

@@ -1,0 +1,17 @@
+﻿@Tournament.Presentation_HostAddress = https://localhost:7072
+
+GET {{Tournament.Presentation_HostAddress}}/api/Tournament
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@id=8
+GET {{Tournament.Presentation_HostAddress}}/api/Tournament/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{Tournament.Presentation_HostAddress}}/api/Tournament/Filter
+Authorization: Bearer {{$bearerToken}}
+
+###

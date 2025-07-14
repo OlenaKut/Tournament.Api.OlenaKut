@@ -1,0 +1,21 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@schema=https
+@hostname=localhost
+@port=7072
+
+GET {{schema}}://{{hostname}}:{{port}}/api/tournament
+
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/tournament
+Accept:application/json
+
+###
+POST {{schema}}://{{hostname}}:{{port}}/api/tournament
+Accept: application/json
+Content-type: application/json
+{
+  "title": "Some name",
+}
+
+
